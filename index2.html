@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>achimiidaifei</title>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: #ffffff;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 4px;
+        }
+
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        /* ========== NAVBAR ========== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 20px 0;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+        .navbar.scrolled {
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(12px);
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .nav-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #FFFFFF 0%, #AAAAAA 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            cursor: default;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+        }
+        .nav-links a:hover {
+            opacity: 1;
+        }
+        .menu-icon {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .menu-icon span {
+            width: 24px;
+            height: 2px;
+            background: white;
+        }
+
+        /* ========== TESLA-STYLE HERO CAROUSEL ========== */
+        .hero-carousel {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background: #000;
+        }
+        .carousel-slides {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 100px;
+        }
+        .carousel-slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+        .slide-content {
+            text-align: center;
+            max-width: 800px;
+            padding: 0 24px;
+            transform: translateY(30px);
+            transition: transform 0.8s ease-out 0.3s;
+            opacity: 0;
+        }
+        .carousel-slide.active .slide-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .slide-title {
+            font-size: 4.2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+        }
+        .slide-sub {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: #e0e0e0;
+            letter-spacing: 0.3px;
+        }
+        .carousel-indicators {
+            position: absolute;
+            bottom: 32px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            z-index: 20;
+        }
+        .indicator {
+            width: 42px;
+            height: 2px;
+            background-color: rgba(255,255,255,0.4);
+            border-radius: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .indicator.active {
+            background-color: white;
+            width: 70px;
+        }
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(6px);
+            width: 48px;
+            height: 48px;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 20;
+            transition: 0.2s;
+            border: 1px solid rgba(255,255,255,0.2);
+            font-size: 28px;
+            font-weight: 300;
+            color: white;
+        }
+        .carousel-arrow:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-50%) scale(1.05);
+        }
+        .arrow-left {
+            left: 32px;
+        }
+        .arrow-right {
+            right: 32px;
+        }
+        @media (max-width: 768px) {
+            .slide-title { font-size: 2.2rem; }
+            .carousel-arrow { width: 36px; height: 36px; font-size: 20px; }
+            .arrow-left { left: 12px; }
+            .arrow-right { right: 12px; }
+            .indicator { width: 28px; }
+            .indicator.active { width: 48px; }
+        }
+
+        /* ========== GALERI GRID RASIO 9:16 ========== */
+        .gallery-section {
+            padding: 100px 0 100px;
+            background: #000;
+        }
+        .section-header {
+            margin-bottom: 56px;
+            text-align: center;
+        }
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+        .section-header p {
+            color: #888;
+            margin-top: 12px;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 28px;
+        }
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            cursor: pointer;
+            aspect-ratio: 9 / 16;
+            background: #0a0a0a;
+            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1), box-shadow 0.3s;
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.5);
+        }
+        .gallery-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 25px 35px -12px rgba(0,0,0,0.8);
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        .overlay-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+            padding: 20px 20px 12px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+        }
+        .gallery-item:hover .overlay-info {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .overlay-info h3 {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        .overlay-info p {
+            font-size: 0.75rem;
+            color: #ccc;
+        }
+
+        /* ========== MODAL LIGHTBOX ========== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.96);
+            z-index: 2000;
+            backdrop-filter: blur(20px);
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-content {
+            max-width: 90vw;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+        .modal-caption {
+            position: absolute;
+            bottom: 30px;
+            text-align: center;
+            background: rgba(0,0,0,0.6);
+            padding: 10px 24px;
+            border-radius: 60px;
+            backdrop-filter: blur(8px);
+            font-size: 0.9rem;
+        }
+        .close-modal {
+            position: absolute;
+            top: 28px;
+            right: 40px;
+            font-size: 44px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .quote-block {
+            padding: 70px 0;
+            background: #050505;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+        }
+        .quote-text {
+            font-size: 1.6rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.4;
+            color: #e5e5e5;
+        }
+        .quote-author {
+            margin-top: 24px;
+            color: #777;
+            letter-spacing: 2px;
+        }
+
+        footer {
+            padding: 50px 32px 40px;
+            background: #000000;
+            border-top: 1px solid #1a1a1a;
+            font-size: 0.8rem;
+            color: #6b6b6b;
+        }
+        .footer-inner {
+            max-width: 1440px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        .footer-links {
+            display: flex;
+            gap: 32px;
+        }
+        .footer-links a {
+            color: #8b8b8b;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-links a:hover {
+            color: white;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @media (max-width: 900px) {
+            .container { padding: 0 20px; }
+            .nav-links { display: none; }
+            .menu-icon { display: flex; }
+            .nav-links.active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: rgba(0,0,0,0.95);
+                backdrop-filter: blur(20px);
+                padding: 30px;
+                align-items: center;
+            }
+            .gallery-grid { gap: 16px; }
+            .quote-text { font-size: 1.3rem; padding: 0 20px; }
+            .footer-inner { flex-direction: column; align-items: center; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+    <div class="nav-container">
+        <div class="logo">WINNXIEE</div>
+        <div class="nav-links" id="navLinks">
+            <a href="#gallery">Foto</a>
+            <a href="#quote">filosopi</a>
+            <a href="#footer">author</a>
+        </div>
+        <div class="menu-icon" id="menuToggle">
+            <span></span><span></span><span></span>
+        </div>
+    </div>
+</nav>
+
+<!-- CAROUSEL dengan FOTO ANDA SENDIRI -->
+<div class="hero-carousel" id="heroCarousel">
+    <div class="carousel-slides" id="carouselSlides"></div>
+    <div class="carousel-indicators" id="carouselIndicators"></div>
+    <div class="carousel-arrow arrow-left" id="prevBtn">‹</div>
+    <div class="carousel-arrow arrow-right" id="nextBtn">›</div>
+</div>
+
+<!-- Galeri Grid 9:16 -->
+<section class="gallery-section" id="gallery">
+    <div class="container">
+        <div class="section-header">
+            <h2>Gallery DaiXinFei</h2>
+            <p>Mentahan Foto My Bini🗿👍</p>
+        </div>
+
+        <div class="gallery-grid" id="galleryGrid"></div>
+    </div>
+</section>
+
+<!-- Quote -->
+<section id="quote" class="quote-block">
+    <div class="quote-text">
+        “Uang memang bukan segalanya… tapi segalanya butuh uang🗿”
+    </div>
+    <div class="quote-author">— winnxiee</div>
+</section>
+
+<!-- Footer dengan link yang bisa diedit -->
+<footer id="footer">
+    <div class="footer-inner">
+        <div class="footer-copyright">
+            <p>© 2026 — winnxiee</p>
+        </div>
+        <div class="footer-links">
+            <!-- GANTI # dengan URL sosial media kamu -->
+            <a href="http://tiktok.com/@achimii_" target="_blank">achimii_</a>
+            <a href="http://tiktok.com/@ochimii_" target="_blank">ochimii_</a>
+            <a href="http://tiktok.com/@achimii_" target="_blank">winnxiee_</a>
+        </div>
+    </div>
+</footer>
+
+<!-- Modal Lightbox -->
+<div id="imageModal" class="modal">
+    <button class="close-modal" id="closeModalBtn">&times;</button>
+    <img class="modal-content" id="modalImage" alt="preview">
+    <div class="modal-caption" id="modalCaption"></div>
+</div>
+
+<script>
+    // ======================= CAROUSEL DENGAN FOTO ANDA SENDIRI =======================
+    // ★★★ GANTI DENGAN FOTO CAROUSEL MILIK ANDA ★★★
+    // Letakkan file foto di folder yang sama dengan HTML ini
+    // Contoh: carousel1.jpg, carousel2.jpg, carousel3.jpg, carousel4.jpg
+    
+    const carouselItems = [
+        { title: "Daixinfei", subtitle: "Natural — Cantik sederhana dengan senyum hangat", bg: "carousel1.jpg" },
+        { title: "Daixinfei", subtitle: "Elegant — Anggun, classy, dan memikat", bg: "carousel2.jpg" },
+        { title: "Daixinfei", subtitle: "Cute — Ceria, manis, dan penuh energi", bg: "carousel3.jpg" },
+        { title: "DaiXinFei", subtitle: "Mysterious — Dingin, tenang, tapi bikin penasaran", bg: "carousel4.jpg" }
+    ];
+    
+    // MUDAHNYA: tinggal ganti nama file, judul, dan deskripsi sesuai foto Anda
+    // Contoh alternatif jika hanya punya 2 foto:
+    /*
+    const carouselItems = [
+        { title: "Sunset", subtitle: "Pantai Selatan", bg: "fotoku1.jpg" },
+        { title: "City Light", subtitle: "Jakarta Malam", bg: "fotoku2.jpg" }
+    ];
+    */
+
+    let currentSlide = 0;
+    let slideInterval;
+    const slidesContainer = document.getElementById('carouselSlides');
+    const indicatorsContainer = document.getElementById('carouselIndicators');
+
+    function buildCarousel() {
+        slidesContainer.innerHTML = '';
+        indicatorsContainer.innerHTML = '';
+        carouselItems.forEach((item, idx) => {
+            const slideDiv = document.createElement('div');
+            slideDiv.className = `carousel-slide ${idx === 0 ? 'active' : ''}`;
+            slideDiv.style.backgroundImage = `linear-gradient(0deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 100%), url(${item.bg})`;
+            slideDiv.innerHTML = `
+                <div class="slide-content">
+                    <div class="slide-title">${item.title}</div>
+                    <div class="slide-sub">${item.subtitle}</div>
+                </div>
+            `;
+            slidesContainer.appendChild(slideDiv);
+            
+            const indicator = document.createElement('div');
+            indicator.className = `indicator ${idx === 0 ? 'active' : ''}`;
+            indicator.addEventListener('click', () => goToSlide(idx));
+            indicatorsContainer.appendChild(indicator);
+        });
+    }
+
+    function updateCarousel() {
+        const slides = document.querySelectorAll('.carousel-slide');
+        const indicators = document.querySelectorAll('.indicator');
+        slides.forEach((slide, i) => {
+            slide.classList.toggle('active', i === currentSlide);
+        });
+        indicators.forEach((ind, i) => {
+            ind.classList.toggle('active', i === currentSlide);
+        });
+    }
+
+    function goToSlide(index) {
+        if (index < 0) index = carouselItems.length - 1;
+        if (index >= carouselItems.length) index = 0;
+        currentSlide = index;
+        updateCarousel();
+        resetAutoPlay();
+    }
+
+    function nextSlide() { goToSlide(currentSlide + 1); }
+    function prevSlide() { goToSlide(currentSlide - 1); }
+
+    function startAutoPlay() {
+        if (slideInterval) clearInterval(slideInterval);
+        slideInterval = setInterval(() => { nextSlide(); }, 5000);
+    }
+    function resetAutoPlay() {
+        if (slideInterval) clearInterval(slideInterval);
+        startAutoPlay();
+    }
+
+    // ======================= GALERI LOKAL (foto1.jpg, foto2.jpg ...) =======================
+    async function checkImageExists(url) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve(true);
+            img.onerror = () => resolve(false);
+            img.src = url;
+        });
+    }
+
+    async function getAvailablePhotos(maxAttempt = 30) {
+        const available = [];
+        for (let i = 1; i <= maxAttempt; i++) {
+            const src = `foto${i}.jpg`;
+            const exists = await checkImageExists(src);
+            if (exists) {
+                available.push({
+                    id: i,
+                    src: src,
+                    title: `Momen #${i}`,
+                    desc: `9:16 · Frame ${i}`
+                });
+            }
+        }
+        return available;
+    }
+
+    const galleryGrid = document.getElementById('galleryGrid');
+    function renderGallery(photos) {
+        galleryGrid.innerHTML = '';
+        if (photos.length === 0) {
+            galleryGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:80px 20px; color:#aaa;">
+                <h3 style="font-weight:400;">📸 Belum ada foto ditemukan</h3>
+                <p style="margin-top:12px;">Pastikan file <strong style="color:white;">foto1.jpg, foto2.jpg, ...</strong> berada di folder yang sama dengan file HTML ini.<br>Rasio 9:16 sangat direkomendasikan untuk tampilan maksimal.</p>
+                <div style="margin-top:30px;">✨ Letakkan foto1.jpg, foto2.jpg, foto3.jpg dan refresh halaman.</div>
+            </div>`;
+            return;
+        }
+        photos.forEach(photo => {
+            const item = document.createElement('div');
+            item.className = 'gallery-item';
+            const img = document.createElement('img');
+            img.src = photo.src;
+            img.alt = photo.title;
+            img.loading = 'lazy';
+            img.onerror = () => { img.style.opacity = '0.4'; };
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay-info';
+            overlay.innerHTML = `<h3>${photo.title}</h3><p>${photo.desc}</p>`;
+            item.appendChild(img);
+            item.appendChild(overlay);
+            item.addEventListener('click', () => openModal(photo.src, photo.title, photo.desc));
+            galleryGrid.appendChild(item);
+        });
+    }
+
+    // ========== MODAL ==========
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const modalCaption = document.getElementById('modalCaption');
+    function openModal(src, title, desc) {
+        modalImg.src = src;
+        modalCaption.innerText = `${title} — ${desc}`;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        setTimeout(() => { if (!modal.classList.contains('active')) modalImg.src = ''; }, 200);
+    }
+    modal.addEventListener('click', (e) => { if (e.target === modal || e.target === modalImg) closeModal(); });
+    document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('active')) closeModal(); });
+
+    // ========== NAVBAR ==========
+    window.addEventListener('scroll', () => {
+        const navbar = document.getElementById('navbar');
+        if (window.scrollY > 40) navbar.classList.add('scrolled');
+        else navbar.classList.remove('scrolled');
+    });
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    menuToggle.addEventListener('click', () => navLinks.classList.toggle('active'));
+    document.querySelectorAll('#navLinks a').forEach(link => {
+        link.addEventListener('click', () => navLinks.classList.remove('active'));
+    });
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const target = this.getAttribute('href');
+            if (target && target !== '#') {
+                const el = document.querySelector(target);
+                if (el) { e.preventDefault(); el.scrollIntoView({ behavior: 'smooth' }); }
+            }
+        });
+    });
+
+    // ========== INIT ==========
+    async function init() {
+        buildCarousel();
+        startAutoPlay();
+        document.getElementById('prevBtn').addEventListener('click', () => { prevSlide(); resetAutoPlay(); });
+        document.getElementById('nextBtn').addEventListener('click', () => { nextSlide(); resetAutoPlay(); });
+        
+        const photos = await getAvailablePhotos(47);
+        renderGallery(photos);
+        if (photos.length > 0) console.log(`✅ Loaded ${photos.length} foto lokal (9:16)`);
+        else console.warn("⚠️ Tidak ada file foto1.jpg, pastikan foto dengan format 9:16 tersedia.");
+    }
+    init();
+</script>
+</body>
+</html>
